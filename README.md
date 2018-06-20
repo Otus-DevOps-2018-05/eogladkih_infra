@@ -1,4 +1,4 @@
-/n\Z/
+/\n\Z/
 # eogladkih_infra
 eogladkih Infra repository
 
@@ -26,4 +26,4 @@ ssh internal
 
 
 bastion_IP = 35.195.154.28
-someinternalhost_IP = 10.132.0.3  
+someinternalhost_IP = 10.132.0.3
