@@ -23,3 +23,10 @@ variable "zone" {
   description = "zone"
   default     = "europe-west1-b"
 }
+
+variable "instance_name" {
+  default = {
+    "0" = "reddit-app0"
+    "1" = "reddit-app1"
+  }
+}
