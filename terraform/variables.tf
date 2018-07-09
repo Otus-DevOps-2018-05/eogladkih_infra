@@ -30,3 +30,13 @@ variable "instance_name" {
     "1" = "reddit-app1"
   }
 }
+
+variable "app_disk_image" {
+  description = "Disck image for reddit app"
+  default     = "reddit-app-base"
+}
+
+variable "db_disk_image" {
+  description = "Disck image for reddit db"
+  default     = "reddit-db-base"
+}
