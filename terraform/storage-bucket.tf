@@ -13,3 +13,4 @@ module "storage-bucket" {
 output "storage-bucket" {
 	value = "${module.storage-bucket.url}"
 }
+
