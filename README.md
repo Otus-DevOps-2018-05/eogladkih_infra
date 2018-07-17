@@ -47,7 +47,7 @@ gcloud compute firewall-rules create default-puma-server --allow tcp:9292 --targ
 
 
 
-## 10-Topic. HW Terraform-1
+## 8-Topic. HW Terraform-1
 
 ### Самостоятельное задание
 Определена переменная ключа для подключения провижинеров и переменная для задания зоны со значением по  умолчанию. 
@@ -98,3 +98,41 @@ resource "google_compute_instance" "app" {
 ```
 
 3. Добавлен конфигурационный файл lb.tf  в котором создается региональный TCP балансировщик для ВМ из листа пп.1. Баланируется порт на котром работают наши сервисы (9292).
+
+
+
+## 9-Topic. HW Terraform-2
+
+### Самостоятельное задание
+- Конфигурация разбита на модули
+- Созданы 2 окружения prod и stage
+
+### Задание со *
+- Создано 2 хранилищи типа bucket (storage-bucket-207421-1 storage-bucket-207421-2)
+- Для каждого из окружений создан конфигурационный файл backend.tf 
+- В результате файлы состояния tfstate каждого из окружений хранятся удаленно, касждый в сооем bucket
+
+### Задание со *
+- Добавлены все необходимые provisioner необходимые для деплоя и работы приложения
+- Реализована автоматическая подстановка внутреннего ip адреса сервера БД в скрипт deploy.sh
+```  
+provisioner "file" {
+    content     = "${data.template_file.user_data.rendered}"
+    destination = "/tmp/puma.service"
+  }
+
+  provisioner "remote-exec" {
+    script = "${path.module}/deploy.sh"
+  }
+}
+
+data "template_file" "user_data" {
+  template = "${file("${path.module}/puma.service")}"
+
+    vars {
+      db_address = "${var.db_internal_ip}"
+    }
+}
+
+```  
+
