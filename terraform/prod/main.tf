@@ -24,3 +24,9 @@ module "vpc" {
   source        = "../modules/vpc"
   source_ranges = ["46.242.10.237/32"]
 }
+
+module "outs_for_ansible" {
+  source          = "../modules/outs_for_ansible"
+  db_external_ip  = "${module.db.db_external_ip}"
+  app_external_ip = "${module.app.app_external_ip}"
+}

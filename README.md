@@ -176,3 +176,77 @@ fi
 
 ```
 
+
+
+## 11-Topic. HW Ansible-2
+
+1. Создан playbook с одним сценарием reddit_app_one_play.yml;
+2. Создан playbook с несколькими сценариями reddit_app_multiple_plays.yml;
+3. Создано несколько playbook app.yml, db.yml, clone.yml, site.yml;
+4. Изменен провижен для Packer образов 
+```
+    "provisioners": [
+        {
+            "type": "ansible",
+            "playbook_file": "ansible/<playbook_name>.yml",
+            "user": "appuser"
+        }
+    ]
+```
+
+### Задание со *
+
+Зпдача ршена псевдо динамическим способом.
+1. В terraform создан модуль out_to_ansble, который берет output значения для внешних ip адресов затем при помощи template_file и local_file формирует файл outs.json.    
+2. В ansible значением по умолчанию для inventory указан скрипт который вычитывает данные из outs.json 
+
+main.tf содуля out_to_ansble:
+```
+data "template_file" "user_data" {
+  template = "${file("${path.module}/terraform_to_ansible.tpl")}"
+
+  vars {
+    db_ext_ip  = "${var.db_external_ip}"
+    app_ext_ip = "${var.app_external_ip}"
+  }
+}
+
+resource "local_file" "file" {
+  content  = "${data.template_file.user_data.rendered}"
+  filename = "${path.module}/outs.json"
+}
+```
+
+terraform_to_ansible.tpl:
+```
+{
+    "app": {
+        "hosts": ["${app_ext_ip}"],
+    },
+    "db": { 
+        "hosts": ["${db_ext_ip}"]
+    },
+        "_meta": {
+            "hostvars": {}
+        }
+}
+
+```
+
+ansible.cfg
+```
+[defaults] 
+inventory = ./dynamic_inventory.sh 
+...
+```
+
+dynamic_inventory.sh:
+```
+#!/bin/bash
+if [ "$1" = "--list" ]; then
+  cat ../terraform/modules/outs_for_ansible/outs.json
+elif [ "$1" = "--host" ]; then
+  echo '{"_meta": {"hostvars": {}}}'
+fi
+
+```
