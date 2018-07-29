@@ -1,5 +1,6 @@
 # eogladkih_infra
 eogladkih Infra repository
+[![Build Status](https://api.travis-ci.com/Otus-DevOps-2018-05/eogladkih_infra.svg?branch=master)](https://api.travis-ci.com/Otus-DevOps-2018-05/eogladkih_infra)
 
 #Задание
 #подключиться к внутреннему хосту можно при помощи функционала ssh proxyjump (ключ -J)
