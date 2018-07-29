@@ -16,8 +16,8 @@ script:
   - echo packer
   - pwd
   - ls -al
-  - cd ../../terraform/stage/ && terraform validate && tflint
-  - cd ../prod && terraform validate && tflint
+  - cd ../../terraform/stage/ && terraform init && terraform validate && tflint
+  - cd ../prod && terraform init && terraform validate && tflint
 notifications:
   slack:
     rooms:
