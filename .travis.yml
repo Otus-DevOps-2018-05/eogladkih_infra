@@ -16,7 +16,7 @@ script:
   - cd ansible/roles && ansible-lint * --exclude=jdauphant.nginx
   - cd ../../terraform/stage/ && terraform init -backend=false && terraform validate --var-file=terraform.tfvars.example && tflint --var-file=terraform.tfvars.example
   - cd ../prod && terraform init -backend=false && terraform validate --var-file=terraform.tfvars.example && tflint --var-file=terraform.tfvars.example
-  - cd ../../ && find packer -name *.json -type f -print0 | xargs -0 -n1 packer validate -var-file=/packer/variables.json.example 
+  - cd ../../ && find packer -name *.json -type f -print0 | xargs -0 -n1 packer validate -var-file=packer/variables.json.example 
 notifications:
   slack:
     rooms:
