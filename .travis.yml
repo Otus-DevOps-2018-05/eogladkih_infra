@@ -14,10 +14,9 @@ script:
   - ls -al
   - cd ansible/roles && ansible-lint * --exclude=jdauphant.nginx
   - echo packer
-  - cd ~
   - pwd
-  - ls 
-  - cd terraform/stage/ && terraform validate && tflint
+  - ls -al
+  - cd ../../terraform/stage/ && terraform validate && tflint
   - cd ../prod && terraform validate && tflint
 notifications:
   slack:
