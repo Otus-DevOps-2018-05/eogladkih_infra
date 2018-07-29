@@ -15,6 +15,7 @@ script:
   - cd ansible/roles && ansible-lint * --exclude=jdauphant.nginx
   - echo packer
   - cd
+  - pwd
   - cd terraform/stage/ && terraform validate && tflint
   - cd ../prod && terraform validate && tflint
 notifications:
