@@ -1,0 +1,26 @@
+---
+#Сделать из исходного скрипта playbook
+##!/bin/bash
+#apt update
+#apt install -y ruby-full ruby-bundler build-essential
+
+- name: Install ruby
+  hosts: all
+  become: true
+  tasks:
+    - name: update package list
+      apt: 
+        update_cache: yes
+
+    - name: Install packages
+      apt: 
+        name: "{{item}}"
+        state: present
+      with_items:
+          - ruby-full
+          - ruby-bundler
+          - build-essential
+
+
+      
+
