@@ -1,5 +1,6 @@
 # eogladkih_infra
-eogladkih Infra repository
+eogladkih Infra repository  
+[![Build Status](https://api.travis-ci.com/Otus-DevOps-2018-05/eogladkih_infra.svg?branch=master)](https://api.travis-ci.com/Otus-DevOps-2018-05/eogladkih_infra)
 
 #Задание
 #подключиться к внутреннему хосту можно при помощи функционала ssh proxyjump (ключ -J)
@@ -253,3 +254,34 @@ fi
 
 
 
+## 13-Topic. HW Ansible-3
+
+1. Выполнено разделение на роли
+2. Создано 2 окружения stage/prod
+3. Добавлена роль для nginx
+4. Создан nginx прокси и соответвующее разрешение в FW (tcp:80) для приложения
+5. \* Настроена динамическая инвентаризация для ansible 
+6. \**Настроена проверка коммитор в репозитори:
+   - packer validate
+   - terraform validate и tflint
+   - ansible-lint
+
+```
+install:
+  - sudo pip install --upgrade pip
+  - sudo pip install ansible-lint==3.4.23
+  - wget https://releases.hashicorp.com/packer/1.2.5/packer_1.2.5_linux_amd64.zip && sudo unzip packer_1.2.5_linux_amd64.zip -d /usr/bin
+  - wget https://github.com/wata727/tflint/releases/download/v0.7.1/tflint_linux_amd64.zip && sudo unzip tflint_linux_amd64.zip -d /usr/bin
+  - wget https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip && sudo unzip terraform_0.11.7_linux_amd64.zip -d /usr/bin
+  - touch ~/.ssh/appuser
+  - touch ~/.ssh/appuser.pub
+script:
+  - cd ansible/roles && ansible-lint * --exclude=jdauphant.nginx
+  - cd ../../terraform/stage/ && terraform init -backend=false && terraform validate --var-file=terraform.tfvars.example && tflint --var-file=terraform.tfvars.example
+  - cd ../prod && terraform init -backend=false && terraform validate --var-file=terraform.tfvars.example && tflint --var-file=terraform.tfvars.example
+  - cd ../../ && find packer -name *.json -type f -print0 | xargs -0 -n1 packer validate -var-file=packer/variables.json.example 
+
+```
+
+7. \**Добавлен бейдж со статусом для билда ветки master  
+[![Build Status](https://api.travis-ci.com/Otus-DevOps-2018-05/eogladkih_infra.svg?branch=master)](https://api.travis-ci.com/Otus-DevOps-2018-05/eogladkih_infra)    
