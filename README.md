@@ -285,3 +285,52 @@ script:
 
 7. \**Добавлен бейдж со статусом для билда ветки master  
 [![Build Status](https://api.travis-ci.com/Otus-DevOps-2018-05/eogladkih_infra.svg?branch=master)](https://api.travis-ci.com/Otus-DevOps-2018-05/eogladkih_infra)    
+
+
+
+## 14-Topic. HW Ansible-4
+
+1. Установлен и настроен Vagrant
+2. В vagrantfile внесены изменения для nginx
+```
+       ansible.extra_vars = {
+        "deploy_user" => "vagrant",
+        "nginx_sites": {
+          "default": [
+            "listen 80",
+            "server_name reddit",
+            "location / {
+              proxy_pass http://127.0.0.1:9292;
+            }"]
+        }
+      }
+```
+
+3. При помощи molecule протестирована роль db 
+4. Дописан тест для проверки доступности порта mongodb
+```
+# check if tcp 27017 listening 
+def test_mongo_port(host):
+    port = host.socket('tcp://0.0.0.0:27017')
+    assert port.is_listening
+```
+5. Настроеа сборка образов packer при помощи соответсвующих ролей
+```
+    "provisioners": [
+        {
+            "type": "ansible",
+            "playbook_file": "ansible/playbooks/packer_db.yml",
+            "user": "appuser",
+            "extra_arguments": ["--tags", "install"],
+            "ansible_env_vars": ["ANSIBLE_ROLES_PATH={{ pwd }}/ansible/roles"]
+        }
+    ]
+```
+
+```
+- name: Add repo and install mongod
+  hosts: all
+  become: true
+  roles:
+    - db
+```
