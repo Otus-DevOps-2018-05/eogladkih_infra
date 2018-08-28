@@ -1,42 +1,7 @@
 ---
-#Сделать из исходного скрипта playbook
-##!/bin/bash
-# apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
-# bash -c 'echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" > /etc/apt/sources.list.d/mongodb-org-3.2.list'
-# apt update
-# apt install -y mongodb-org
-# systemctl start mongod
-# systemctl enable mongod
-
 - name: Add repo and install mongod
   hosts: all
   become: true
-  tasks:
-    - name: Add an apt key
-      apt_key:
-        id: EA312927
-        keyserver: keyserver.ubuntu.com
-        
-
-    - name: Add repo
-      apt_repository:
-        repo: deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse
-        state: present
-
-    - name: update package list
-      apt: 
-        update_cache: yes
-
-    - name: Install mongod
-      apt: 
-        name: mongodb-org
-        state: present
-
-    - name: start and enable mongod
-      systemd:
-        name: mongod
-        state: started
-        enabled: yes
-
-
+  roles:
+    - db
 
